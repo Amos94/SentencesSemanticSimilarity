@@ -60,15 +60,36 @@ class SentencesSemanticSimilarity():
         # we will create a similarity measure object in tf-idf space.
         # tf-idf stands for term frequency-inverse document frequency. Term frequency
         # is how often the word shows up in the document and inverse document fequency scales the value by how rare the word is in the corpus.
-        sims = gensim.similarities.Similarity('/usr/workdir/', tf_idf[self.corpus], num_features=len(self.dictionary))
+        sims = gensim.similarities.Similarity('/Users/amosmadalinneculau/Desktop/', tf_idf[self.corpus], num_features=len(self.dictionary))
 
         #now create a query document and convert it to tf-idf.
         self.query = re.sub(r'^[a-zA-Z0-9\s]', '', self.query)
         self.query = [w.lower() for w in nltk.word_tokenize(self.query)]
 
-        query_doc_bow = gensim.corpora.dictionary.doc2bow(self.query)
+        query_doc_bow = self.dictionary.doc2bow(self.query)
         query_doc_tf_idf = tf_idf[query_doc_bow]
 
         #Return an array of document similarities to query. We see that the second document
         # is the most similar with the overlapping of socks and force.
         return sims[query_doc_tf_idf]
+
+# import ssl
+#
+# try:
+#     _create_unverified_https_context = ssl._create_unverified_context
+# except AttributeError:
+#     pass
+# else:
+#     ssl._create_default_https_context = _create_unverified_https_context
+#
+# nltk.download()
+
+
+test = SentencesSemanticSimilarity("Socks are a force for good.",
+                                   ["I'm taking the show on the road.",
+                 "My socks are a force multiplier.",
+             "I am the barber who cuts everyone's hair who doesn't cut their own.",
+             "Legend has it that the mind is a mad monkey.",
+            "I make my own fun."])
+
+print(test.getSimilarity())
